@@ -1,5 +1,5 @@
 #!/bin/bash
-# Runs on the Vast worker before start_server.sh. Fetches KataGo + model, starts the HTTP wrapper.
+# Runs on the Vast worker before start_server.sh. Downloads KataGo + model and writes the config (idempotent). Services are started by supervisor (see provision_vast.sh).
 # Defaults: official KataGo v1.18.2 CUDA 12.8 release (an AppImage -> needs extract-and-run, no FUSE in containers)
 # and the public kata1-tf3-b11c768 network. Override with KATAGO_BIN_URL / KATAGO_MODEL_URL.
 set -euo pipefail
@@ -19,6 +19,3 @@ nnMaxBatchSize = 64
 nnCacheSizePowerOfTwo = 22
 nnMutexPoolSizePowerOfTwo = 16
 CFG
-export KATAGO_EXECUTABLE="$D/katago" KATAGO_CONFIG="$D/analysis.cfg" KATAGO_MODEL="$D/model.bin.gz" PORT=18000
-: > /var/log/portal/katago.log   # per-run log (PyWorker matches on it)
-nohup python3 "$(dirname "$0")/katago_http_wrapper.py" >> /var/log/portal/katago.log 2>&1 &
