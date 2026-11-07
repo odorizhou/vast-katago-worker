@@ -1,0 +1,1 @@
+# vastai is installed by Vast's start_server.sh
